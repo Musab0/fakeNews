@@ -6,7 +6,7 @@ from .validators import validate_file_extension
 class Image(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
-    mediaType= models.Charfield(max_length=10) #image or video 
+    # mediaType= models.CharField(max_length=10) #image or video 
     image = models.ImageField(upload_to='images') # this will eventually be replpaced by filefield 
     # mediaFile= models.FileField(upload_to='images',validators=[validate_file_extension])
     date = models.DateTimeField(auto_now_add=True, blank=True)

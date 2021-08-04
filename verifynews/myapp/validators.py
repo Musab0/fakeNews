@@ -11,10 +11,10 @@ def validate_file_extension(value):
         raise ValidationError('Unsupported file extension.')
 
 
-def media_type(ext)
+def media_type(ext):
     if ext.upper() in imgExt:
         return 'image'
-    else if ext.upper() in vidExt: 
+    elif ext.upper() in vidExt: 
         return 'video'
     else:
         return 'unknown'

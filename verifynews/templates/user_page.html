@@ -13,31 +13,39 @@
 
   <h1>Upload Media File</h1>
   <form method="post" enctype="multipart/form-data">
+    <div class="container">
     {% csrf_token %}
-    {{ form|crispy }}
-    <button type="submit" name="user_upload"  >Upload</button>
+    {{ form|crispy }} 
+  
+    <button type="submit" name="user_upload" class="btn btn-primary btn-md "  >Upload</button>
+    </div>
   </form>
 
   {% if img_obj %}
-  <h3>Succesfully uploaded : {{img_obj.title}}</h3>
-  <h3>on: {{img_obj.date}}</h3>
-  <h4>Generated PDQ hash: {{img_obj.pdq}}</h4>
-  <img src="{{ img_obj.image.url}}" alt="connect" style="max-height:300px">
-
-  <h2>Similarity Results:</h2>
-  <h3>Total Images in Database: {{db_images}} </h3>
-  <h3>Similar Images found: {{counter}} </h3>
-  <ul>
+  <div>
+    <h3>Succesfully uploaded</h3>
+    <h2>on: {{img_obj.date}}</h2>
+    <h4>Generated PDQ hash: {{img_obj.pdq}}</h4>
+    <img src="{{ img_obj.image.url}}" alt="connect" style="max-height:300px">
+    <h2>Similarity Results:</h2>
+    <h3>Total Images in Database: {{db_images}} </h3>
+    <h3>Similar Images found: {{counter}} </h3>
+  </div>
+  
+  <ul class="list-group ">
   {% for similarity,i in similarity_zip %}
-     <li>
-      {{ forloop.counter }}
-      <img src="{{ i.image.url}}" alt="connect" style="max-height:300px">
-      <p>Similarity: {{similarity}}</p>
-      <p>PDQ hash: {{i.pdq}}</p>
-      <p>uploaded on: {{i.date}}</p>
-      <p>title: {{i.title}}</p>
-      <p>description: {{i.description}}</p>
-      
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <img src="{{ i.image.url}}" alt="connect" style="max-height:100px">
+          <p>Similarity: {{similarity}}</p>
+          <p>PDQ hash: {{i.pdq}}</p>
+          <p>uploaded on: {{i.date}}</p>
+          <p>title: {{i.title}}</p>
+          <p>description: {{i.description}}</p>
+        </li>
+      </ul>
+      <span class="badge badge-primary badge-pill">{{ forloop.counter }}</span>
     </li>
   {% endfor %}
   </ul>
@@ -49,8 +57,11 @@
 
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ adminForm|crispy }}
-    <button type="submit" name="admin_upload">Upload</button>
+    
+
+      {{ adminForm|crispy }}
+      <button type="submit" name="admin_upload"  class="btn btn-primary">Upload</button>
+    
   </form>
   {% endif %}
 
