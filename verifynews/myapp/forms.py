@@ -1,20 +1,29 @@
 from django import forms
-from verifynews.myapp.models import Image
+from verifynews.myapp.models import Image, User
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 
 
 
 class ImageForm(forms.ModelForm):
-    """Form for the image model"""
     class Meta:
         model = Image
         fields = ('image',) #must be tuple not string hence the , 
 
+
+class UserForm(forms.ModelForm):
+
+
+    class Meta:
+        model=User
+        fields=('phone',) 
+    
+
+
 class ImageAdminForm(forms.ModelForm):
     class Meta:
         model = Image
-        fields = ('title','description')
+        fields = ('category','title','description',)
 
         # def __init__(self, *args, **kwargs):
         #     super().__init__(*args, **kwargs)

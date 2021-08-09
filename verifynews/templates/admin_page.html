@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+{% block content %}
+
+  <h1>All images in database</h1>
+
+
+  {%if img_obj %}
+  <h1>All images in database</h1>
+
+  <p>{{img_obj}}</p>
+  {%endif%}
+  <ul class="list-group ">
+  {% for i in all_images%}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          {%if i.fileType == 'image'%}
+          <img src="{{ i.image.url}}" alt="connect" width="320" height="240">
+          {%else%}
+          <video width="320" height="240" controls> 
+            <source src={{i.image.url}} type="video/mp4">
+          </video>
+          {%endif%}
+          <h3>{{i.category}}</h3> 
+          <p>type: {{i.fileType}}</p>
+          <p>Hash: {{i.pdq}}</p>
+          <p>uploaded on: {{i.date}}</p>
+          <p>title: {{i.title}}</p>
+          <p>description: {{i.description}}</p>
+          <p>Uploaded by: </p>
+          <div class="table-wrapper-scroll-y my-custom-scrollbar">  
+              <table class="table table-bordered table-striped table-sm">
+                <thead>
+                  <tr>
+                    <th scope="col">phone</th>
+                    <th scope="col">Time</th>
+                  </tr>
+                </thead>
+                <tbody>           
+                  {%for upload in i.upload_set.all %}
+                    <tr>
+                      <td>{{upload.user}} </td>
+                      <td>{{upload.date}} </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table> 
+          </div>
+          {%if i.category == 'unsorted'%}
+          <form method="post" enctype="multipart/form-data">
+            <div class="container">
+              {% csrf_token %}
+              {{ adminform|crispy  }}
+              <input type="hidden" name="image_id" value="{{ i.id }}">     
+              <button type="submit" name=update_button class="btn btn-primary btn-md "  >Update</button>
+            </div>
+          </form>
+          {%endif%}
+        </li class="list-group-item">
+      </ul>
+      <span class="badge badge-primary badge-pill">{{ forloop.counter }}</span>
+    </li>
+  {% endfor %}
+  </ul>
+
+
+
+
+
+
+{% endblock content %}

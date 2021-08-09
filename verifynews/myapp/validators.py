@@ -1,5 +1,5 @@
 
-imgExt= ['.JPG','.PNG','.GIF','.WEBP','.TIFF','.PSD','.RAW','.BMP','.HEIF','.INDD','SVG']
+imgExt= ['.JPG','.JPEG','.PNG','.GIF','.WEBP','.TIFF','.PSD','.RAW','.BMP','.HEIF','.INDD','SVG']
 vidExt= ['.WEBM','.MPG','.MP2','.MPEG','.MPE','.MPV','.OGG','.MP4','.M4P','.M4V','.AVI','.WMV','.MOV','.QT','.FLV','.SWF','.AVCHD']
 
 def validate_file_extension(value):
@@ -11,7 +11,9 @@ def validate_file_extension(value):
         raise ValidationError('Unsupported file extension.')
 
 
-def media_type(ext):
+def file_type(value):
+    import os
+    ext = os.path.splitext(value)[1]  # [0] returns path+filename
     if ext.upper() in imgExt:
         return 'image'
     elif ext.upper() in vidExt: 
