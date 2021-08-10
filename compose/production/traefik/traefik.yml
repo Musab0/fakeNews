@@ -28,7 +28,7 @@ certificatesResolvers:
 http:
   routers:
     web-secure-router:
-      rule: "Host(`musab.ae`)"
+      rule: "Host(`musab.ae`) "
       entryPoints:
         - web-secure
       middlewares:
@@ -36,6 +36,16 @@ http:
       service: django
       tls:
         # https://docs.traefik.io/master/routing/routers/#certresolver
+        certResolver: letsencrypt
+    
+    web-media-router:
+      rule: "Host(`musab.ae`) && PathPrefix(`/media/`)"
+      entryPoints:
+        - web-secure
+      middlewares:
+        - csrf
+      service: django-media
+      tls:
         certResolver: letsencrypt
 
   middlewares:
