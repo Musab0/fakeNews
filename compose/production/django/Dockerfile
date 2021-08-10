@@ -3,10 +3,10 @@ ARG PYTHON_VERSION=3.9-slim-buster
 
 
 # define an alias for the specfic python version used in this file.
-FROM python:${PYTHON_VERSION} as python
+FROM ubuntu:focal as python
 
 # Python build stage
-FROM python as python-build-stage
+FROM ubuntu:focal as python-build-stage
 
 ARG BUILD_ENVIRONMENT=production
 
@@ -15,7 +15,12 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   # dependencies for building Python packages
   build-essential \
   # psycopg2 dependencies
-  libpq-dev
+  libpq-dev\
+  python3-pip\
+  python3-dev\
+  python-is-python3
+RUN pip3 install wheel
+RUN echo "alias python=python3" >> ~/.bashrc
 
 # Requirements are installed here to ensure they will be cached.
 COPY ./requirements .
@@ -26,7 +31,7 @@ RUN pip wheel --wheel-dir /usr/src/app/wheels  \
 
 
 # Python 'run' stage
-FROM python as python-run-stage
+FROM ubuntu:focal as python-run-stage
 
 ARG BUILD_ENVIRONMENT=production
 ARG APP_HOME=/app
@@ -47,9 +52,17 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   libpq-dev \
   # Translations dependencies
   gettext \
+  python3-pip\
+  python3-dev\
+  python-is-python3\
+  ffmpeg\  
   # cleaning up unused files
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install wheel
+
+RUN echo "alias python=python3" >> ~/.bashrc
 
 # All absolute dir copies ignore workdir instruction. All relative dir copies are wrt to the workdir instruction
 # copy python dependency wheels from python-build-stage
