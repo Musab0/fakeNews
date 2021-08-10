@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+=
+
+
+{% block content %}
+
+<section> 
+    <h1>{{server_setting}}</h1>
+  <h1>Enter Phone Number</h1>
+  <form method="post" enctype="multipart/form-data">{% csrf_token %}
+      {{ userform|crispy  }}
+      <button type="submit" name="user_upload" id="user_upload_submit" class="btn btn-primary btn-md "  >Enter</button>
+    </div>
+  </form>
+</section>
+
+ <script>
+   document.querySelector('#user_upload_submit').onclick = function(e){
+//    window.location.replace('test')
+   }
+
+ </script>
+
+
+{% endblock content %}

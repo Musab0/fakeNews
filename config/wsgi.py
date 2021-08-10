@@ -28,6 +28,7 @@ sys.path.append(str(ROOT_DIR / "verifynews"))
 # mod_wsgi daemon mode with each site in its own daemon process, or use
 # os.environ["DJANGO_SETTINGS_MODULE"] = "config.settings.production"
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.production")
+os.environ.setdefault('SERVER_GATEWAY_INTERFACE', 'Web') # use this variable in other parts of the code to verify that the app is using ASGI 
 
 # This application object is used by any WSGI server configured to use this
 # file. This includes Django's development server, if the WSGI_APPLICATION

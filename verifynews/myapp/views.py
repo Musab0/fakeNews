@@ -5,12 +5,9 @@ import subprocess
 from itertools import chain
 import os
 from django.shortcuts import redirect
-
-
 from scipy.spatial.distance import hamming
 # Create your views here.
 from django.http import HttpResponse
-
 
 
 def user_page(request):
@@ -20,7 +17,7 @@ def user_page(request):
         userform = UserForm(request.POST)
 
         
-                
+            
         if imageform.is_valid() and ('user_upload' in request.POST):  #"user_upload" is the name of the upload button
 
             all_images=Image.objects.all()
@@ -29,6 +26,8 @@ def user_page(request):
             img_obj = imageform.instance
             img_obj.set_fileType()
             img_obj.save()
+
+
             
             
             
@@ -104,6 +103,35 @@ def user_page(request):
         return render(request, 'user_page.html', {'userform': userform,'imageform': imageform})
 
 
+def home_page(request):
+    
+
+    if request.method =='POST':
+        userform = UserForm(request.POST)
+        userform.is_valid()
+        userform.save()
+        return redirect("/myapp/"+userform.instance.phone+'/?username='+userform.instance.phone)
+    else:
+
+
+        if os.environ.get('SERVER_GATEWAY_INTERFACE') == 'Web':
+            server_setting = 'server: WSGI'
+        elif os.environ.get('SERVER_GATEWAY_INTERFACE') == 'Asynchronous':
+            server_setting = 'server: ASGI'
+        else: 
+            server_setting='server not set'
+
+        userform = UserForm()
+        return render(request, 'home_page.html', {'userform': userform,'server_setting': server_setting,})
+
+
+# def chat_page(request,room_name):
+#     return render(request, 'chat_page.html', {'phone_number': phone_number,})
+
+def room(request, room_name):
+    username = request.GET.get('username', 'Anonymous')
+    # messages = Message.objects.filter(room=room_name)[0:25]
+    return render(request, 'room.html', {'room_name': room_name, 'username': username,})
 
 
 def admin_page(request):
@@ -136,6 +164,23 @@ def admin_page(request):
         unsorted_images=Image.objects.filter(category='unsorted').order_by('date')
         all_images=list(chain(unsorted_images,fake_images, real_images))
         return render(request, 'admin_page.html',{'all_images':all_images, 'adminform':adminform})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
