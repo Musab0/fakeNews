@@ -89,6 +89,8 @@ COPY --chown=django:django . ${APP_HOME}
 # make django owner of the WORKDIR directory as well.
 RUN chown django:django ${APP_HOME}
 
+RUN chmod 777 ${APP_HOME}
+
 USER django
 
 ENTRYPOINT ["/entrypoint"]
