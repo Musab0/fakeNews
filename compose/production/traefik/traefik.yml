@@ -28,7 +28,7 @@ certificatesResolvers:
 http:
   routers:
     web-secure-router:
-      rule: "Host(`musab.ae`)|| Host(`newscheck.ae`) "
+      rule: "Host(`musab.ae`)"
       entryPoints:
         - web-secure
       middlewares:
@@ -61,8 +61,7 @@ http:
         servers:
           - url: http://django:5000
 
-
-  django-media:
+    django-media:
       loadBalancer:
         servers:
           - url: http://nginx:80
