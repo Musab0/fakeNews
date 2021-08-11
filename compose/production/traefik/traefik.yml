@@ -28,7 +28,7 @@ certificatesResolvers:
 http:
   routers:
     web-secure-router:
-      rule: "Host(`musab.ae` || `newscheck.ae`) "
+      rule: "Host(`musab.ae`)|| Host(`newscheck.ae`) "
       entryPoints:
         - web-secure
       middlewares:
