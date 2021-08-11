@@ -28,7 +28,7 @@ certificatesResolvers:
 http:
   routers:
     web-secure-router:
-      rule: "Host(`musab.ae`) "
+      rule: "Host(`musab.ae` || `newscheck.ae`) "
       entryPoints:
         - web-secure
       middlewares:
@@ -60,6 +60,12 @@ http:
       loadBalancer:
         servers:
           - url: http://django:5000
+
+
+  django-media:
+      loadBalancer:
+        servers:
+          - url: http://nginx:80
 
 providers:
   # https://docs.traefik.io/master/providers/file/
