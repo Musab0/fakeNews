@@ -100,7 +100,7 @@ def user_page(request):
     else:
         imageform = ImageForm()
         userform = UserForm()
-        return render(request, 'user_page.html', {'userform': userform,'imageform': imageform})
+        return render(request, 'user_page.html', {'userform': userform,'imageform': imageform, 'server_setting':check_server()})
 
 
 def home_page(request):
@@ -114,12 +114,7 @@ def home_page(request):
     else:
 
 
-        if os.environ.get('SERVER_GATEWAY_INTERFACE') == 'Web':
-            server_setting = 'server: WSGI'
-        elif os.environ.get('SERVER_GATEWAY_INTERFACE') == 'Asynchronous':
-            server_setting = 'server: ASGI'
-        else: 
-            server_setting='server not set'
+
 
         userform = UserForm()
         return render(request, 'home_page.html', {'userform': userform,'server_setting': server_setting,})
@@ -205,3 +200,12 @@ def compare_tmk(f1,f2):
     else: 
         return 0
 
+
+def check_server():
+    if os.environ.get('SERVER_GATEWAY_INTERFACE') == 'Web':
+        server_setting = 'server: WSGI'
+    elif os.environ.get('SERVER_GATEWAY_INTERFACE') == 'Asynchronous':
+        server_setting = 'server: ASGI'
+    else: 
+        server_setting='server not set'
+    return server_setting
