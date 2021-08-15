@@ -3,12 +3,9 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
+ 
   <h1>All images in database</h1>
 
-
-  {%if img_obj %}
-  <h1>All images in database</h1>
-  {%endif%}
   <div class="container">
   <ul class="list-group ">
   {% for i in all_images%}
@@ -52,10 +49,10 @@
             <div class="container">
               {% csrf_token %}
               {{ adminform|crispy  }}
-              <input type="hidden" name="image_id" value="{{ i.id }}">     
-              <button type="submit" name=update_button class="btn btn-primary btn-md "  >Update</button>
+              <input type="hidden" id=img_ref name="image_id" value="{{ i.id }}">     
+              <button type="submit" id=update-btn name=update_button class="btn btn-primary btn-md "  >Update</button>
             </div>
-          </form>
+          </form> -
           {%endif%}
         </li class="list-group-item">
       </ul>
@@ -65,7 +62,6 @@
   </ul>
 
 </div>
-
 
 
 

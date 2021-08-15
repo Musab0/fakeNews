@@ -1,13 +1,11 @@
 {% extends "base.html" %}
 
 {% load crispy_forms_tags %}
-=
-
 
 {% block content %}
 
 <section> 
-    <h1>{{server_setting}}</h1>
+    <!-- <h1>{{server_setting}}</h1> -->
   <h1>Enter Phone Number</h1>
   <form method="post" enctype="multipart/form-data">{% csrf_token %}
       {{ userform|crispy  }}
@@ -16,12 +14,30 @@
   </form>
 </section>
 
- <script>
+ <!-- <script>
    document.querySelector('#user_upload_submit').onclick = function(e){
 //    window.location.replace('test')
    }
 
- </script>
+ </script> -->
+<!-- 
+What chat room would you like to enter?<br>
+<input id="room-name-input" type="text" size="100"><br>
+<input id="room-name-submit" type="button" value="Enter">
+
+<script>
+    document.querySelector('#room-name-input').focus();
+    document.querySelector('#room-name-input').onkeyup = function(e) {
+        if (e.keyCode === 13) {  // enter, return
+            document.querySelector('#room-name-submit').click();
+        }
+    };
+
+    document.querySelector('#room-name-submit').onclick = function(e) {
+        var roomName = document.querySelector('#room-name-input').value;
+        window.location.pathname = '/myapp/room/' + roomName + '/';
+    };
+</script> -->
 
 
 {% endblock content %}

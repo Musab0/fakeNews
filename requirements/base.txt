@@ -1,5 +1,6 @@
 scipy==1.7.0
 channels==3.0.4
+channels_redis==3.3.0
 uvicorn[standard]==0.14.0  # https://github.com/encode/uvicorn
 pytz==2021.1  # https://github.com/stub42/pytz
 python-slugify==5.0.2  # https://github.com/un33k/python-slugify

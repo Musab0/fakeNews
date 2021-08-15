@@ -7,7 +7,10 @@ import os
 from django.shortcuts import redirect
 from scipy.spatial.distance import hamming
 # Create your views here.
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 
 
 def user_page(request):
@@ -52,7 +55,7 @@ def user_page(request):
 
                 for i in all_images.filter(fileType='image'): 
                     dist=hamming_distance(i.pdq,img_obj.pdq)
-                    if  dist > 0.8:
+                    if  dist > 0.7:
                         counter+=1
                         similar_images.append(i)
                         similarity.append(dist)
@@ -109,30 +112,39 @@ def home_page(request):
     if request.method =='POST':
         userform = UserForm(request.POST)
         userform.is_valid()
-        userform.save()
-        return redirect("/myapp/"+userform.instance.phone+'/?username='+userform.instance.phone)
+        try: 
+            user_obj=User.objects.get(phone = userform.instance.phone) # if the phone number belong to a user in the database. assign that object toe user_obj
+        except:
+            user_obj= userform.instance 
+            userform.save() 
+        return redirect("/myapp/"+user_obj.phone)
+
     else:
-
-
-
-
         userform = UserForm()
-        return render(request, 'home_page.html', {'userform': userform,'server_setting': server_setting,})
+        return render(request, 'home_page.html', {'userform': userform,'server_setting': check_server(),})
 
 
-# def chat_page(request,room_name):
-#     return render(request, 'chat_page.html', {'phone_number': phone_number,})
+
+
+
+
 
 def room(request, room_name):
+
+    imageform = ImageForm(request.POST or None, request.FILES or None)
+    data={}
+    if request.is_ajax():
+        if imageform.is_valid():
+            imageform.save()
+            data['status']='ok'
+            return JsonResponse(data)
     username = request.GET.get('username', 'Anonymous')
-    # messages = Message.objects.filter(room=room_name)[0:25]
-    return render(request, 'room.html', {'room_name': room_name, 'username': username,})
+    return render(request, 'room.html', {'room_name': room_name, 'username': username,'imageform': imageform})
+
 
 
 def admin_page(request):
-    
-
-    
+       
     if request.method =='POST':
         adminform=ImageAdminForm(request.POST)
         adminform.is_valid()
@@ -143,24 +155,32 @@ def admin_page(request):
 
         adminform=ImageAdminForm()
 
-        real_images=Image.objects.filter(category='real').order_by('date')
-        fake_images=Image.objects.filter(category='fake').order_by('date')
-        unsorted_images=Image.objects.filter(category='unsorted').order_by('date')
-        all_images=list(chain(unsorted_images,fake_images, real_images))
-        return render(request, 'admin_page.html',{'all_images':all_images, 'adminform':adminform, 'img_obj':img_obj})
+        if(img_obj.category != 'unsorted'):
+            for phoneNumber in img_obj.upload_set.all():
+                channel_layer = get_channel_layer()
+                async_to_sync(channel_layer.group_send)('chat_'+phoneNumber.user.phone, {
+                "type": "chat.message",
+                "message": "It is " + img_obj.category + "\rTitle: " + img_obj.title + "\rDescriptio:" + img_obj.description 
+                })
+
+
+        # real_images=Image.objects.filter(category='real').order_by('-date')
+        # fake_images=Image.objects.filter(category='fake').order_by('-date')
+        # unsorted_images=Image.objects.filter(category='unsorted').order_by('-date')
+        # all_images=list(chain(unsorted_images,fake_images, real_images))
+        return redirect("/myapp/admin_page") # to avoid Form resubmission on page refresh 
+        # return render(request, 'admin_page.html',{'all_images':all_images, 'adminform':adminform, 'img_obj':img_obj})
         
 
     else: 
 
         adminform=ImageAdminForm()
 
-        real_images=Image.objects.filter(category='real').order_by('date')
-        fake_images=Image.objects.filter(category='fake').order_by('date')
-        unsorted_images=Image.objects.filter(category='unsorted').order_by('date')
+        real_images=Image.objects.filter(category='real').order_by('-date')
+        fake_images=Image.objects.filter(category='fake').order_by('-date')
+        unsorted_images=Image.objects.filter(category='unsorted').order_by('-date')
         all_images=list(chain(unsorted_images,fake_images, real_images))
         return render(request, 'admin_page.html',{'all_images':all_images, 'adminform':adminform})
-
-
 
 
 
