@@ -55,7 +55,7 @@ def user_page(request):
 
                 for i in all_images.filter(fileType='image'): 
                     dist=hamming_distance(i.pdq,img_obj.pdq)
-                    if  dist > 0.7:
+                    if  dist > 0.6:
                         counter+=1
                         similar_images.append(i)
                         similarity.append(dist)
