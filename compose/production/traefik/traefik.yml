@@ -28,7 +28,7 @@ certificatesResolvers:
 http:
   routers:
     web-secure-router:
-      rule: "Host(`newscheck.ae`)"
+      rule: "Host(`musab.ae`)"
       entryPoints:
         - web-secure
       middlewares:
@@ -39,7 +39,7 @@ http:
         certResolver: letsencrypt
     
     web-media-router:
-      rule: "Host(`newscheck.ae`) && PathPrefix(`/media/`)"
+      rule: "Host(`musab.ae`) && PathPrefix(`/media/`)"
       entryPoints:
         - web-secure
       middlewares:
