@@ -31,13 +31,17 @@
 {{ room_name|json_script:"room-name" }}
 <script>
 
-    const csrf = document.getElementsByName('csrfmiddlewaretoken')
+
+
+
+const csrf = document.getElementsByName('csrfmiddlewaretoken')
     const form=document.getElementById('p-form')
     const url = ""
     const image= document.getElementById('id_image')
 
     form.addEventListener('submit', e=>{
         e.preventDefault() 
+
         const fd = new FormData()
         fd.append('csrfmiddlewaretoken',csrf[0].value)
         fd.append('image', image.files[0])
@@ -63,24 +67,44 @@
 
 
 
-    const roomName = JSON.parse(document.getElementById('room-name').textContent);
+    
 
-    const chatSocket = new WebSocket(
-        'ws://'
+
+
+    const roomName = JSON.parse(document.getElementById('room-name').textContent);
+    ws_url=( 'ws://'
         + window.location.host
         + '/ws/myapp/'
         + roomName
-        + '/'
-    );
+        + '/');
 
-    chatSocket.onmessage = function(e) {
+    start(ws_url)
+
+    function start(ws_url){
+        chatSocket = new WebSocket(ws_url);
+        chatSocket.onmessage = function(e) {
         const data = JSON.parse(e.data);
         document.querySelector('#chat-log').value += (data.message + '\n');
-    };
+        };
 
-    chatSocket.onclose = function(e) {
+        chatSocket.onclose = function(e) {
         console.error('Chat socket closed unexpectedly');
-    };
+        setTimeout(function(){start(ws_url)}, 5000);
+        };
+    }
+
+    // var chatSocket = new WebSocket(ws_url);
+
+
+
+    // chatSocket.onmessage = function(e) {
+    //     const data = JSON.parse(e.data);
+    //     document.querySelector('#chat-log').value += (data.message + '\n');
+    // };
+
+    // chatSocket.onclose = function(e) {
+    //     console.error('Chat socket closed unexpectedly');
+    // };
 
     document.querySelector('#chat-message-input').focus();
     document.querySelector('#chat-message-input').onkeyup = function(e) {
@@ -89,15 +113,18 @@
         }
     };
 
-    // document.querySelector('#chat-message-submit').onclick = function(e) {
-    //     const messageInputDom = document.querySelector('#chat-message-input');
-    //     const message = messageInputDom.value;
-    //     chatSocket.send(JSON.stringify({
-    //         'message': message
-    //     }));
-    //     messageInputDom.value = '';
-    // };
-    
+    document.querySelector('#chat-message-submit').onclick = function(e) {
+        const messageInputDom = document.querySelector('#chat-message-input');
+        const message = messageInputDom.value;
+        chatSocket.send(JSON.stringify({
+            'message': message
+        }));
+        messageInputDom.value = '';
+    };
+
+
+
+
 </script>
 
 {% endblock content %}

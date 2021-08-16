@@ -12,6 +12,8 @@ from django.http import HttpResponse, JsonResponse
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 
+from verifynews.myapp.consumers import ChatConsumer
+
 
 def user_page(request):
     """Process images uploaded by users"""
@@ -136,10 +138,30 @@ def room(request, room_name):
     if request.is_ajax():
         if imageform.is_valid():
             imageform.save()
+            
             data['status']='ok'
             return JsonResponse(data)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     username = request.GET.get('username', 'Anonymous')
-    return render(request, 'room.html', {'room_name': room_name, 'username': username,'imageform': imageform})
+    return render(request, 'room.html', {'room_name': room_name, 'username': username,'imageform': imageform,})
 
 
 
