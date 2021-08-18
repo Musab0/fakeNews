@@ -1,5 +1,7 @@
-verifyNews
+News Verification Platform
 ==========
+A user can submit a photo or a video to check if it is real or fake. The uploaded media file is compared to the ones available in the database. if there is a match, the user gets  message back witht the description of the media file and if it real or fake. if no similar media files exit in the databse, the admin gets notified that a new media file was uploaded and needs to be sorted. The admin verifies the media file and update the description and category fields. Once the details of the media files are updated by the admin, the sender recieves a message with the updated details. Any other users who upload the same media file will automatically get the details since it is now saved in the server. 
+
 
 verify news
 
